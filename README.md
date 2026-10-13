@@ -33,18 +33,18 @@ npm run dev
 Open `http://localhost:5173`. Configure `VITE_API_URL` to change the API origin.
 
 ## Demo flow
-Register a patient from the UI, sign in, then book an appointment. Admin and doctor accounts can be created through `/api/auth/register` with the corresponding role only in a trusted local demo; production deployments must restrict role assignment to admins. For safety, the public registration route forces `PATIENT` regardless of submitted role.
+Register a patient from the UI, sign in, then book an appointment. The local development seeder creates `admin@clinicqueue.local` / `AdminPass123!` and `doctor@clinicqueue.local` / `DoctorPass123!` if they do not already exist. Public registration always creates a `PATIENT`; role assignment is not exposed through the public API. Change or remove demo credentials before deployment.
 
 ## API overview (14 routes)
 - `POST /api/auth/register`, `POST /api/auth/login`
-- `GET /api/doctors`, `GET /api/doctors/{id}/slots`
-- `POST /api/appointments`, `GET /api/appointments/my`
+- `GET /api/doctors`, `GET /api/doctors/{id}`, `GET /api/doctors/{id}/slots`
+- `POST /api/appointments`, `GET /api/appointments/my`, `GET /api/appointments/{id}`, `DELETE /api/appointments/{id}`
 - `GET /api/appointments` (ADMIN/DOCTOR), `PATCH /api/appointments/{id}/status` (ADMIN/DOCTOR)
-- `GET /api/admin/summary` (ADMIN)
+- `GET /api/admin/summary`, `GET /api/admin/users` (ADMIN)
 - `GET /api/health`
 
 ## Tests
 ```bash
 cd backend && mvn test
 ```
-The slot-search performance claim in the project brief is a target measurement, not a benchmark guaranteed on every machine. Use the included seed runner and Postman collection to reproduce timings locally.
+The schema includes indexes for doctor/date/status slot lookups and patient appointment history. The project does not include a 5,000-record performance benchmark; measure response times against a locally seeded dataset before reporting performance figures.
